@@ -490,7 +490,7 @@ index 0000000000000000000000000000000000000000..90aa59617f9e6b9be2595dd1364a7ebf
 +    "base64/lib/lib.c",
 +  ]
 +
-+  if (arm_fpu == "neon" && target_cpu == "arm") {
++  if (target_cpu == "arm") {
 +    defines += ["HAVE_NEON32=1"]
 +    deps += [":base64_neon32"]
 +  } else {
