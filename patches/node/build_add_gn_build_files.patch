@@ -451,10 +451,10 @@ index 0000000000000000000000000000000000000000..db80a8f00a84bf54f723c21300e7579c
 +}
 diff --git a/deps/base64/BUILD.gn b/deps/base64/BUILD.gn
 new file mode 100644
-index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6eddfcdb8
+index 0000000000000000000000000000000000000000..90aa59617f9e6b9be2595dd1364a7ebf8be5c57e
 --- /dev/null
 +++ b/deps/base64/BUILD.gn
-@@ -0,0 +1,208 @@
+@@ -0,0 +1,215 @@
 +config("base64_config") {
 +  include_dirs = [
 +    "base64/include",
@@ -490,7 +490,7 @@ index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6
 +    "base64/lib/lib.c",
 +  ]
 +
-+  if (target_cpu == "arm") {
++  if (arm_fpu == "neon" && target_cpu == "arm") {
 +    defines += ["HAVE_NEON32=1"]
 +    deps += [":base64_neon32"]
 +  } else {
@@ -546,7 +546,7 @@ index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6
 +
 +  sources = [ "base64/lib/arch/ssse3/ssse3_codec.c" ]
 +
-+  if (!is_win) {
++  if (!is_win || is_clang) {
 +    cflags = ["-mssse3"]
 +  }
 +}
@@ -567,7 +567,7 @@ index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6
 +
 +  sources = [ "base64/lib/arch/sse41/sse41_codec.c" ]
 +
-+  if (!is_win) {
++  if (!is_win || is_clang) {
 +    cflags = ["-msse4.1"]
 +  }
 +}
@@ -587,7 +587,7 @@ index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6
 +
 +  sources = [ "base64/lib/arch/sse42/sse42_codec.c" ]
 +
-+  if (!is_win) {
++  if (!is_win || is_clang) {
 +    cflags = ["-msse4.2"]
 +  }
 +}
@@ -623,7 +623,10 @@ index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6
 +    "HAVE_AVX2=1"
 +  ]
 +
-+  cflags_c = [ "-Wno-implicit-fallthrough" ]
++  cflags_c = [
++    "-Wno-implicit-fallthrough",
++    "-Wno-implicit-function-declaration",
++  ]
 +
 +  sources = [ "base64/lib/arch/avx2/avx2_codec.c" ]
 +
@@ -646,6 +649,10 @@ index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6
 +  cflags_c = [ "-Wno-implicit-fallthrough" ]
 +
 +  sources = [ "base64/lib/arch/neon32/neon32_codec.c" ]
++
++  if (!is_win) {
++    cflags = ["-mfpu=neon"]
++  }
 +}
 +
 +static_library("base64_neon64") {
