@@ -451,10 +451,10 @@ index 0000000000000000000000000000000000000000..db80a8f00a84bf54f723c21300e7579c
 +}
 diff --git a/deps/base64/BUILD.gn b/deps/base64/BUILD.gn
 new file mode 100644
-index 0000000000000000000000000000000000000000..5a1a4b88856cb370bb9887f52f074f60b16ffefc
+index 0000000000000000000000000000000000000000..cbc9503b5c3463b51643912069decce6eddfcdb8
 --- /dev/null
 +++ b/deps/base64/BUILD.gn
-@@ -0,0 +1,204 @@
+@@ -0,0 +1,208 @@
 +config("base64_config") {
 +  include_dirs = [
 +    "base64/include",
@@ -475,7 +475,11 @@ index 0000000000000000000000000000000000000000..5a1a4b88856cb370bb9887f52f074f60
 +    "base64/lib",
 +  ]
 +
-+  cflags_c = [ "-Wno-implicit-fallthrough" ]
++  cflags_c = [
++    "-Wno-implicit-fallthrough",
++    "-Wno-unused-but-set-variable",
++    "-Wno-shadow",
++  ]
 +
 +  sources = [
 +    "base64/include/libbase64.h",
